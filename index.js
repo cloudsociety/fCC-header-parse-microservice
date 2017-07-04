@@ -4,7 +4,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req,res) => {
-  const ipaddress = req.ip;
+  var ipaddress = req.headers['x-forwarded-for'] ||
+       req.connection.remoteAddress ||
+       req.socket.remoteAddress ||
+       req.connection.socket.remoteAddress;
+  // const ipaddress = req.ip;
   const language = req.headers['accept-language'];
   const software = req.headers['user-agent'].split(/[()]/g)[1];
   res.send({ipaddress, language, software});
